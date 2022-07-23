@@ -2,9 +2,9 @@ package com.mycompany.simulator.app
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT
-import org.junit.jupiter.api.Test
 import org.springframework.boot.test.web.server.LocalManagementPort
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -24,7 +24,7 @@ internal class SimulatorApplicationTest {
     fun setUp() {
         webTestClient = WebTestClient
             .bindToServer()
-            .baseUrl("http://localhost:${managementPort}")
+            .baseUrl("http://localhost:$managementPort")
             .responseTimeout(Duration.ofSeconds(5))
             .build()
     }
