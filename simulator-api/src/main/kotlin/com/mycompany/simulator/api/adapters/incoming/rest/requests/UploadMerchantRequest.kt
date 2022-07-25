@@ -10,5 +10,5 @@ data class UploadMerchantRequest(
     val messageId: String? = null,
 
     @field:Valid
-    val setupRequests: List<SetupRequest>? = null,
+    val setupRequests: List<SetupRequest>? = null
 )

@@ -10,5 +10,5 @@ data class StreetAddress(
     val addressLine1: String? = null,
     @get:NotBlank(groups = [WarningGroup::class])
     @get:Size(max = 40, groups = [WarningGroup::class])
-    val addressLine2: String? = null,
+    val addressLine2: String? = null
 )

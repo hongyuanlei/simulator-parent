@@ -15,5 +15,5 @@ data class SetupRequest(
     val lastName: String,
     val birthDay: LocalDate? = null,
     @field:Valid
-    val streetAddress: StreetAddress? = null,
+    val streetAddress: StreetAddress? = null
 )
