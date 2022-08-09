@@ -18,6 +18,7 @@
 
     <modules>
         <module>simulator-api</module>
+        <module>simulator-api-migration</module>
         <module>simulator-authorisation</module>
         <module>simulator</module>
     </modules>
@@ -35,6 +36,11 @@
             <dependency>
                 <groupId>com.mycompany</groupId>
                 <artifactId>simulator-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mycompany</groupId>
+                <artifactId>simulator-api-migration</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -1,17 +1,67 @@
-version: '3.8'
 services:
   database:
-    build:
-      context: ./containers/database
+    image: postgres:14.1-alpine
     restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=simulator
     ports:
       - '5432:5432'
     volumes:
+      - ./containers/database:/tools
       - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "bash", "/tools/health-check.sh"]
+      interval: 1s
+      retries: 60
+
+  localstack:
+    image: localstack/localstack:latest
+    environment:
+      - AWS_DEFAULT_REGION=ap-southeast-1
+      - EDGE_PORT=4566
+      - SERVICES=sqs
+    volumes:
+      - ./containers/localstack/bootstrap:/docker-entrypoint-initaws.d/
+      - /tmp/localstack:/tmp/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - '4566:4566'
+    healthcheck:
+      test: ["CMD", "bash", "-c", "awslocal sqs list-queues"]
+      interval: 1s
+      retries: 60
+
+  simulator-api-migration:
+    image: maven:3.8.6-jdk-11
+    volumes:
+      - ./simulator-api-migration:/code/simulator-api-migration
+      - ./pom.xml:/code/pom.xml
+      - maven:/root/.m2
+    working_dir: /code/simulator-api-migration
+    command: mvn flyway:migrate
+    depends_on:
+      database:
+        condition: service_healthy
+
+  bash:
+    image: maven:3.8.6-jdk-11
+    volumes:
+      - .:/code
+      - maven:/root/.m2
+    working_dir: /code
+    entrypoint: /bin/bash
+    stdin_open: true
+    tty: true
+    depends_on:
+      localstack:
+        condition: service_healthy
+      simulator-api-migration:
+        condition: service_completed_successfully
 
 volumes:
   db:
+    driver: local
+  maven:
     driver: local
