@@ -45,6 +45,15 @@ services:
       database:
         condition: service_healthy
 
+  simulator-api-test:
+    image: maven:3.8.6-jdk-11
+    volumes:
+      - ./pom.xml:/code/pom.xml
+      - ./simulator-api:/code/simulator-api
+      - maven:/root/.m2
+    working_dir: /code/simulator-api
+    command: mvn test
+
   bash:
     image: maven:3.8.6-jdk-11
     volumes:
